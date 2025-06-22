@@ -22,10 +22,24 @@ class VideoProcessor(VideoProcessorBase):
 
         return av.VideoFrame.from_ndarray(annotated_frame, format="bgr24")
 
-webrtc_streamer(key="trash-detection",
-                mode=WebRtcMode.SENDRECV,
-                video_processor_factory=VideoProcessor,
-                media_stream_constraints={"video": True, "audio": False},
-                async_processing=True)
+webrtc_streamer(
+    key="trash-detection",
+    mode=WebRtcMode.SENDRECV,
+    video_processor_factory=VideoProcessor,
+    media_stream_constraints={"video": True, "audio": False},
+    async_processing=True,
+    rtc_configuration={
+        "iceServers": [
+            {"urls": ["stun:stun.l.google.com:19302"]},
+            {"urls": ["stun:stun1.l.google.com:19302"]}
+        ]
+    },
+    video_html_attrs={
+        "style": "width: 100%; height: auto;",
+        "controls": False,
+        "autoPlay": True,
+        "muted": True,
+    },
+)
 
 st.info("Model: my_model.pt | Framework: YOLOv8 | Streamlit + WebRTC")
